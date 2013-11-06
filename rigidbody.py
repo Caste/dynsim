@@ -55,7 +55,7 @@ def orthonormalize(m):
 #    return q
 
 class rigid_body:
-    damping = 0.0
+    damping = 0.5
 
     def __init__(self):
         # for display
@@ -111,11 +111,11 @@ class rigid_body:
         #               J-1 * (t - b)
         #               J-1 * c
 
-        a = np.dot(self._inertia_tensor, angular_velocity)
-        b = np.dot(crossProdMatrix(angular_velocity), a)
+        a = np.dot(self._inertia_tensor, self._angular_velocity)
+        b = np.dot(crossProdMatrix(self._angular_velocity), a)
         c = self._torque - b
 
-        return np.dot(numpy.linalg.inv(self._inertia_tensor), c) - rigid_body.damping * angular_velocity
+        return np.dot(numpy.linalg.inv(self._inertia_tensor), c) - rigid_body.damping * self._angular_velocity
 
     def __time_step_rk(self, delta_time):
         # translational

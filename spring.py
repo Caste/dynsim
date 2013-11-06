@@ -4,11 +4,12 @@ import rigidbody
 import numpy as np
 import numpy.linalg as la
 import OpenGL.GL as gl
+import OpenGL.GLUT as glut
 
 class spring:
     def __init__(self, stiffness, body1, global_contact_point1, body2, global_contact_point2, color=None):
         self.stiffness = stiffness
-        self.__length = la.norm(global_contact_point1 - global_contact_point2)
+        self.length = la.norm(global_contact_point1 - global_contact_point2)
 
         # bodies that are connected by this spring
         # together with the local point where the connection occurs.
@@ -33,14 +34,14 @@ class spring:
 
         # compute force properties
         force_direction = (point1 - point2) / current_length
-        force_strength = self.stiffness * (current_length - self.__length)
+        force_strength = self.stiffness * (current_length - self.length)
 
         # get point velocities:
         point1_velocity = self.body1.velocity_of_point(point1)
         point2_velocity = self.body2.velocity_of_point(point2)
 
         # add damping to the force
-        damping = 0.0
+        damping = 0.1
         force = force_direction * force_strength - damping * (point2_velocity - point1_velocity)
 
         self.body2.apply_force_at(force, point2)
