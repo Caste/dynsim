@@ -25,8 +25,8 @@ look_at_z = -1.0
 
 # XZ position of the camera
 cam_pos_x = 0.0
-cam_pos_y = 0.0
-cam_pos_z = 5.0
+cam_pos_y = -3.0
+cam_pos_z = 25.0
 
 # the key states. These variables will be zero
 # when no key is being presses
@@ -109,17 +109,26 @@ def init():
     c.apply_force_at(np.array([0.0, 10.0, 0.0]), np.array([2.1, -0.1, 0.1]))
     bodies.append(c)
 
-    c2 = rigidbody.cube()
+    c2 = rigidbody.sphere(0.5)
     c2.position = np.array([-2.0, -3.0, 0.0])
     c2.mass = 1.0
     c2.color = np.array([0.0, 0.0, 1.0])
     #c2.apply_force_at(np.array([0.0, 50.0, 0.0]), np.array([-2.1, -0.1, 0.0]))
     bodies.append(c2)
 
+    c3 = rigidbody.cube()
+    c3.position = np.array([-4.0, -1.0, 0.0])
+    c3.mass = 3.0
+    c3.color = np.array([0.0, 0.0, 1.0])
+    bodies.append(c3)
+
     #s = spring.spring(2.0, c, np.array([1.5, 0.5, 0.5]), c2, np.array([-1.5, 0.5, 0.5]))
-    s = spring.spring(2.0, c, np.array([2.0, -0.5, 0.0]), c2, np.array([-2.1, -2.5, 0.1]))
+    s = spring.spring(5.0, c, np.array([2.0, -0.5, 0.0]), c2, np.array([-2.1, -2.5, 0.2]))
     s.length = 2.0
     springs.append(s)
+
+    s2 = spring.spring(5.0, c2, c2.position, c3, c3.position)
+    springs.append(s2)
 
 # -------------------------------------------------------
 def simulate():
