@@ -127,7 +127,7 @@ class rigid_body:
         return np.dot(self._orientation, point) + self.position
 
     def velocity_of_point(self, point):
-        local_point = self.convert_to_local(point)
+        local_point = point - self.position
         velocity = self._velocity + np.dot(crossProdMatrix(self._angular_velocity), local_point)
         return velocity
 
