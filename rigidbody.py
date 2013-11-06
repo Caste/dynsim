@@ -54,9 +54,8 @@ def orthonormalize(m):
 #    q, r = numpy.linalg.qr(matrix)
 #    return q
 
-class rigid_body:
-    damping = 0.5
 
+class particle:
     def __init__(self):
         # for display
         self.color = np.array([0.0, 0.0, 0.0])
@@ -67,12 +66,6 @@ class rigid_body:
         self._velocity = np.array([0.0, 0.0, 0.0])
         self._force = np.array([0.0, 0.0, 0.0])
 
-        # rotational
-        self._orientation = np.identity(3)
-        self._angular_velocity = np.array([0.0, 0.0, 0.0])
-        self._torque = np.array([0.0, 0.0, 0.0])
-        self._inertia_tensor = np.identity(3)
-
     def time_step(self, delta_time, use_runge_kutta):
         # do not simulate bodies without mass
         if self.mass == 0.0:
@@ -80,15 +73,88 @@ class rigid_body:
 
         # choose appropriate method
         if use_runge_kutta:
-            self.__time_step_rk(delta_time)
+            self._time_step_rk(delta_time)
         else:
-            self.__time_step_euler(delta_time)
+            self._time_step_euler(delta_time)
 
-    def __time_step_euler(self, delta_time):
+    def _time_step_euler(self, delta_time):
         # update translations
         self.position += self._velocity * delta_time
         self._velocity += (self._force / self.mass) * delta_time
         self._force = np.array([0.0, 0.0, 0.0])
+
+    def _acceleration(self, pos, vel, t):
+        # this could include constraints later!
+        return self._force / self.mass - rigid_body.damping * vel
+
+    def _time_step_rk(self, delta_time):
+        # translational
+        x1 = self.position
+        v1 = self._velocity
+        a1 = self._acceleration(x1, v1, 0)
+
+        x2 = self.position + 0.5 * v1 * delta_time
+        v2 = self._velocity + 0.5 * a1 * delta_time
+        a2 = self._acceleration(x2, v2, delta_time / 2.0)
+
+        x3 = self.position + 0.5 * v2 * delta_time
+        v3 = self._velocity + 0.5 * a2 * delta_time
+        a3 = self._acceleration(x3, v3, delta_time / 2.0)
+
+        x4 = self.position + v3 * delta_time
+        v4 = self._velocity + a3 * delta_time
+        a4 = self._acceleration(x4, v4, delta_time)
+
+        self.position += (delta_time / 6.0) * (v1 + 2 * v2 + 2 * v3 + v4)
+        self._velocity += (delta_time / 6.0) * (a1 + 2 * a2 + 2 * a3 + a4)
+        self._force = np.array([0.0, 0.0, 0.0])
+
+    def apply_force(self, force):
+        self._force += force
+
+    def apply_force_at(self, force, point):
+        self.apply_force(force)
+
+    def convert_to_local(self, point):
+        return point - self.position
+
+    def convert_to_global(self, point):
+        return point + self.position
+
+    def velocity_of_point(self, point):
+        return self._velocity
+
+    def draw(self):
+        # store the matrix that has been used for transformations before,
+        # because all translations, rotations, scaling alter it
+        gl.glPushMatrix()
+
+        # set the appropriate color
+        gl.glColor3f(self.color[0], self.color[1], self.color[2])
+
+        # apply the translation
+        gl.glTranslatef(self.position[0], self.position[1], self.position[2])
+
+        self.draw_shape()
+
+        # restore previous transformation matrix
+        gl.glPopMatrix()
+
+
+class rigid_body(particle):
+    damping = 0.5
+
+    def __init__(self):
+        particle.__init__(self)
+
+        # rotational
+        self._orientation = np.identity(3)
+        self._angular_velocity = np.array([0.0, 0.0, 0.0])
+        self._torque = np.array([0.0, 0.0, 0.0])
+        self._inertia_tensor = np.identity(3)
+
+    def _time_step_euler(self, delta_time):
+        particle.__time_step_euler(self, delta_time)
 
         # update rotations (np.dot is matrix multiplication, matrix-vector multiplication or dot product for 2 vectors)
         self._orientation += np.dot(crossProdMatrix(self._angular_velocity), self._orientation) * delta_time
@@ -100,10 +166,6 @@ class rigid_body:
 
         # orthonormalize orientation
         self._orientation = orthonormalize(self._orientation)
-
-    def __acceleration(self, pos, vel, t):
-        # this could include constraints later!
-        return self._force / self.mass - rigid_body.damping * vel
 
     def __angular_acceleration(self, orientation, angular_velocity, t):
         # split up w' = J-1 * (t - w x (Jw))
@@ -117,27 +179,8 @@ class rigid_body:
 
         return np.dot(numpy.linalg.inv(self._inertia_tensor), c) - rigid_body.damping * self._angular_velocity
 
-    def __time_step_rk(self, delta_time):
-        # translational
-        x1 = self.position
-        v1 = self._velocity
-        a1 = self.__acceleration(x1, v1, 0)
-
-        x2 = self.position + 0.5 * v1 * delta_time
-        v2 = self._velocity + 0.5 * a1 * delta_time
-        a2 = self.__acceleration(x2, v2, delta_time / 2.0)
-
-        x3 = self.position + 0.5 * v2 * delta_time
-        v3 = self._velocity + 0.5 * a2 * delta_time
-        a3 = self.__acceleration(x3, v3, delta_time / 2.0)
-
-        x4 = self.position + v3 * delta_time
-        v4 = self._velocity + a3 * delta_time
-        a4 = self.__acceleration(x4, v4, delta_time)
-
-        self.position += (delta_time / 6.0) * (v1 + 2 * v2 + 2 * v3 + v4)
-        self._velocity += (delta_time / 6.0) * (a1 + 2 * a2 + 2 * a3 + a4)
-        self._force = np.array([0.0, 0.0, 0.0])
+    def _time_step_rk(self, delta_time):
+        particle._time_step_rk(self, delta_time)
 
         # rotational
         o1 = self._orientation
@@ -160,9 +203,6 @@ class rigid_body:
         self._orientation += (delta_time / 6.0) * np.dot(crossProdMatrix(w1 + 2 * w2 + 2 * w3 + w4), self._orientation)
         self._angular_velocity += (delta_time / 6.0) * (t1 + 2 * t2 + 2 * t3 + t4)
         self._torque = np.array([0.0, 0.0, 0.0])
-
-        # check orthonormality of orientation: should be Identity matrix!!
-        print(np.dot(np.transpose(self._orientation), self._orientation))
 
         # orthonormalize orientation
         self._orientation = orthonormalize(self._orientation)
@@ -196,9 +236,6 @@ class rigid_body:
 
     def draw_shape(self):
         print("Not implemented")
-
-    def apply_force(self, force):
-        self._force += force
 
     def convert_to_local(self, point):
         return np.dot(numpy.linalg.inv(self._orientation), (point - self.position))
@@ -256,26 +293,14 @@ class cube(rigid_body):
         glut.glutSolidCube(1.0)
 
 
-class sphere(rigid_body):
+class sphere(particle):
     def __init__(self, radius=1.0):
-        rigid_body.__init__(self)
+        particle.__init__(self)
         self.radius = radius
 
         self._inertia_tensor = np.array([[(self.radius ** 2) * 0.4, 0.0, 0.0],
                                          [0.0, (self.radius ** 2) * 0.4, 0.0],
                                          [0.0, 0.0, (self.radius ** 2) * 0.4]]) * self.mass
-
-    def convert_to_local(self, point):
-        # get the rotated and translated point in local coordinates and apply inverse scaling
-        local_point = rigid_body.convert_to_local(self, point)
-        local_point /= self.radius
-        return local_point
-
-    def convert_to_global(self, point):
-        # apply scaling, then rotation and translation
-        local_point = point
-        local_point *= self.radius
-        return rigid_body.convert_to_global(self, local_point)
 
     def draw_shape(self):
         # draw sphere
