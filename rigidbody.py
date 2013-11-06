@@ -55,7 +55,7 @@ def orthonormalize(m):
 #    return q
 
 class rigid_body:
-    damping = 0.05
+    damping = 0.0
 
     def __init__(self):
         # for display
@@ -93,10 +93,13 @@ class rigid_body:
         # update rotations (np.dot is matrix multiplication, matrix-vector multiplication or dot product for 2 vectors)
         self._orientation += np.dot(crossProdMatrix(self._angular_velocity), self._orientation) * delta_time
         self._angular_velocity += np.dot(numpy.linalg.inv(self._inertia_tensor),
-                                        (self._torque - np.dot(self._angular_velocity,
-                                                              np.dot(self._inertia_tensor,
-                                                                     self._angular_velocity)))) * delta_time
+                                         (self._torque - np.dot(self._angular_velocity,
+                                                                np.dot(self._inertia_tensor,
+                                                                       self._angular_velocity)))) * delta_time
         self._torque = np.array([0.0, 0.0, 0.0])
+
+        # orthonormalize orientation
+        self._orientation = orthonormalize(self._orientation)
 
     def __acceleration(self, pos, vel, t):
         # this could include constraints later!
@@ -190,6 +193,7 @@ class rigid_body:
         # apply force to linear motion of body
         self.apply_force(force)
 
+
 class cube(rigid_body):
     def __init__(self):
         rigid_body.__init__(self)
@@ -197,8 +201,9 @@ class cube(rigid_body):
         self.height = 1.0
         self.depth = 1.0
 
-        self._inertia_tensor = np.array([[(self.height**2 + self.depth**2)/12.0, 0.0, 0.0],
-            [0.0, (self.width**2+self.depth**2)/12.0, 0.0], [0.0, 0.0, (self.width**2 + self.height**2)/12.0]])
+        self._inertia_tensor = np.array([[(self.height ** 2 + self.depth ** 2) / 12.0, 0.0, 0.0],
+                                         [0.0, (self.width ** 2 + self.depth ** 2) / 12.0, 0.0],
+                                         [0.0, 0.0, (self.width ** 2 + self.height ** 2) / 12.0]])
 
     def convert_to_local(self, point):
         # get the rotated and translated point in local coordinates and apply inverse scaling
@@ -218,7 +223,7 @@ class cube(rigid_body):
 
     def draw(self):
         # store the matrix that has been used for transformations before,
-        # because all translations, rotations, scalings alter it
+        # because all translations, rotations, scaling alter it
         gl.glPushMatrix()
 
         # set the appropriate color
