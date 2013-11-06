@@ -9,9 +9,50 @@ import OpenGL.GLUT as glut
 def crossProdMatrix(vec):
     return np.array([[0.0, -vec[2], vec[1]], [vec[2], 0.0, -vec[0]], [-vec[1], vec[0], 0]])
 
-def orthonormalize(matrix):
-    q, r = numpy.linalg.qr(matrix)
-    return q
+# Bringt kleine Abweichungen von der Orthonormalitaet
+# von M in Ordnung, ein Durchlauf genuegt, super Algorithmus!
+# Wenn bei Nutation "orthonormalize" nicht angewandt wird, so Desaster.
+def orthonormalize(m):
+    eps2 = 1.0e-18
+    v1 = m[:][0]
+    v2 = m[:][1]
+    v3 = m[:][2]
+
+    v1 /= numpy.linalg.norm(v1)
+    v2 /= numpy.linalg.norm(v2)
+    v3 /= numpy.linalg.norm(v3)
+
+    for i in xrange(10):
+        stop = True
+        v12 = np.cross(v1, v2)
+        if numpy.linalg.norm(v12 - v3)**2 > eps2:
+            stop = False
+
+        v31 = np.cross(v3, v1)
+        if numpy.linalg.norm(v31 - v2)**2 > eps2:
+            stop = False
+
+        v23 = np.cross(v2, v3)
+        if numpy.linalg.norm(v23 - v1)**2 > eps2:
+            stop = False
+
+        v1 = (v1 + v23) * 0.5
+        v2 = (v2 + v31) * 0.5
+        v3 = (v3 + v12) * 0.5
+
+        if stop:
+            break
+
+    result = np.zeros((3, 3))
+    result[:][0] = v1
+    result[:][1] = v2
+    result[:][2] = v3
+
+    return result
+
+#def orthonormalize(matrix):
+#    q, r = numpy.linalg.qr(matrix)
+#    return q
 
 class rigid_body:
     damping = 0.05
