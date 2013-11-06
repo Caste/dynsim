@@ -26,7 +26,7 @@
       <file leaf-file-name="main.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="115" column="5" selection-start="2736" selection-end="2736" vertical-scroll-proportion="0.0" vertical-offset="1442" max-vertical-offset="3255">
+            <state line="142" column="45" selection-start="3692" selection-end="3692" vertical-scroll-proportion="0.0" vertical-offset="1783" max-vertical-offset="3165">
               <folding />
             </state>
           </provider>
@@ -35,7 +35,7 @@
       <file leaf-file-name="rigidbody.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/rigidbody.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="144" column="23" selection-start="5503" selection-end="5503" vertical-scroll-proportion="0.6597444" vertical-offset="1702" max-vertical-offset="3030">
+            <state line="12" column="27" selection-start="290" selection-end="290" vertical-scroll-proportion="0.3678474" vertical-offset="0" max-vertical-offset="3150">
               <folding />
             </state>
           </provider>
@@ -44,7 +44,7 @@
       <file leaf-file-name="spring.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spring.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="19" selection-start="1592" selection-end="1592" vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1095">
+            <state line="42" column="19" selection-start="1592" selection-end="1592" vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="1095">
               <folding>
                 <element signature="e#25#41#0" expanded="true" />
               </folding>
@@ -65,12 +65,13 @@
         <option value="$USER_HOME$/anaconda/lib/python2.7/site-packages/Quaternion.py" />
         <option value="$PROJECT_DIR$/quaternion.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/rigidbody.py" />
         <option value="$PROJECT_DIR$/spring.py" />
+        <option value="$PROJECT_DIR$/rigidbody.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="2" />
     <option name="y" value="22" />
     <option name="width" value="1280" />
     <option name="height" value="774" />
@@ -335,18 +336,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1280" height="774" extended-state="0" />
+    <frame x="2" y="22" width="1280" height="774" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3277439" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3277439" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.120426826" sideWeight="0.3939394" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17740652" sideWeight="0.66972476" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39693877" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17740652" sideWeight="0.32874617" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17740652" sideWeight="0.33944955" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39602447" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17740652" sideWeight="0.26299694" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18469387" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39602447" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -367,20 +368,20 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/rigidbody.py</url>
+          <line>146</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="13" />
+      <option name="time" value="16" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/rigidbody.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="52" selection-start="1705" selection-end="1705" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2610">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/OpenGL/GL/VERSION/GL_1_1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="513" column="13" selection-start="12748" selection-end="12748" vertical-scroll-proportion="0.0" vertical-offset="7695" max-vertical-offset="14715" />
@@ -426,19 +427,9 @@
         <state line="96" column="0" selection-start="3300" selection-end="3300" vertical-scroll-proportion="-3.2841163" vertical-offset="2893" max-vertical-offset="6285" />
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/numpy/linalg/linalg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="327" column="0" selection-start="9536" selection-end="9536" vertical-scroll-proportion="0.33333334" vertical-offset="4528" max-vertical-offset="30135" />
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/numpy/core/numeric.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1213" column="4" selection-start="34942" selection-end="34942" vertical-scroll-proportion="0.15823606" vertical-offset="17983" max-vertical-offset="38775" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="5" selection-start="2736" selection-end="2736" vertical-scroll-proportion="0.0" vertical-offset="1442" max-vertical-offset="3255">
+        <state line="1213" column="4" selection-start="34942" selection-end="34942" vertical-scroll-proportion="0.15823606" vertical-offset="17983" max-vertical-offset="38775">
           <folding />
         </state>
       </provider>
@@ -450,9 +441,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/numpy/linalg/linalg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="327" column="0" selection-start="9536" selection-end="9536" vertical-scroll-proportion="0.0" vertical-offset="4663" max-vertical-offset="30135">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/OpenGL/error.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="181" column="0" selection-start="6549" selection-end="6549" vertical-scroll-proportion="0.24110672" vertical-offset="2593" max-vertical-offset="3615">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="142" column="45" selection-start="3692" selection-end="3692" vertical-scroll-proportion="0.0" vertical-offset="1783" max-vertical-offset="3165">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/spring.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="19" selection-start="1592" selection-end="1592" vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1095">
+        <state line="42" column="19" selection-start="1592" selection-end="1592" vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="1095">
           <folding>
             <element signature="e#25#41#0" expanded="true" />
           </folding>
@@ -461,7 +473,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/rigidbody.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="144" column="23" selection-start="5503" selection-end="5503" vertical-scroll-proportion="0.6597444" vertical-offset="1702" max-vertical-offset="3030">
+        <state line="12" column="27" selection-start="290" selection-end="290" vertical-scroll-proportion="0.3678474" vertical-offset="0" max-vertical-offset="3150">
           <folding />
         </state>
       </provider>
