@@ -9,6 +9,9 @@ import OpenGL.GLUT as glut
 def crossProdMatrix(vec):
     return np.array([[0.0, -vec[2], vec[1]], [vec[2], 0.0, -vec[0]], [-vec[1], vec[0], 0]])
 
+def orthonormalize(matrix):
+    q, r = numpy.linalg.qr(matrix)
+    return q
 
 class rigid_body:
     damping = 0.05
@@ -113,6 +116,12 @@ class rigid_body:
         self._orientation += (delta_time/6.0)*np.dot(crossProdMatrix(w1 + 2*w2 + 2*w3 + w4), self._orientation)
         self._angular_velocity += (delta_time/6.0)*(t1 + 2*t2 + 2*t3 + t4)
         self._torque = np.array([0.0, 0.0, 0.0])
+
+        # check orthonormality of orientation: should be Identity matrix!!
+        print(np.dot(np.transpose(self._orientation), self._orientation))
+
+        # orthonormalize orientation
+        self._orientation = orthonormalize(self._orientation)
 
     def draw(self):
         print("Not implemented!")
