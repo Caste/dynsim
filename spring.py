@@ -41,7 +41,7 @@ class spring:
 
         # add damping to the force
         damping = 0.0
-        force = force_direction * force_strength - damping * la.norm(point2_velocity - point1_velocity)
+        force = force_direction * force_strength - damping * (point2_velocity - point1_velocity)
 
         self.body2.apply_force_at(force, point2)
         self.body1.apply_force_at(force * -1.0, point1)
