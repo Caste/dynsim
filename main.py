@@ -7,9 +7,11 @@ import numpy as np
 import math
 import rigidbody
 import spring
+import cloth
 
 bodies = []
 springs = []
+blanket = cloth.cloth(3, 3, 1.0, 5.0)
 
 # -------------------------------------------------------
 # camera parameters
@@ -74,6 +76,8 @@ def render():
     for s in springs:
         s.draw()
 
+    blanket.draw()
+
     # redraw
     glut.glutSwapBuffers()
     glut.glutPostRedisplay()
@@ -137,6 +141,8 @@ def simulate():
     timeStep = glut.glutGet(glut.GLUT_ELAPSED_TIME) - lastTime
     simulationTime = timeStep / 1000.0
 
+    gravity = np.array([0.0, -9.81, 0.0])
+
     while simulationTime > 0:
         # apply spring forces
         for s in springs:
@@ -144,8 +150,10 @@ def simulate():
 
         # simulate bodies and add gravity
         for body in bodies:
-            body.apply_force(np.array([0.0, -9.81, 0.0]))
+            body.apply_force(gravity)
             body.time_step(min(simulationTime, maxTimeStep), use_runge_kutta)
+
+        blanket.simulate_timestep(min(simulationTime, maxTimeStep), gravity, use_runge_kutta)
 
         simulationTime -= maxTimeStep
 
