@@ -144,7 +144,6 @@ class rigid_body:
         local_point = self.convert_to_local(point)
 
         # if force is not applied at center: compute torque
-        local_point /= numpy.linalg.norm(local_point)
         self._torque += np.dot(crossProdMatrix(local_point), force)
 
         # apply force to linear motion of body
