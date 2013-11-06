@@ -203,7 +203,7 @@ class cube(rigid_body):
 
         self._inertia_tensor = np.array([[(self.height ** 2 + self.depth ** 2) / 12.0, 0.0, 0.0],
                                          [0.0, (self.width ** 2 + self.depth ** 2) / 12.0, 0.0],
-                                         [0.0, 0.0, (self.width ** 2 + self.height ** 2) / 12.0]])
+                                         [0.0, 0.0, (self.width ** 2 + self.height ** 2) / 12.0]]) * self.mass
 
     def convert_to_local(self, point):
         # get the rotated and translated point in local coordinates and apply inverse scaling
