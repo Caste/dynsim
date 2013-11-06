@@ -56,8 +56,25 @@ class spring:
         point1 = self.body1.convert_to_global(self.__contact_point1)
         point2 = self.body2.convert_to_global(self.__contact_point2)
 
-        # draw a line between them
+        current_length = la.norm(point1 - point2)
+
+        # draw contact points as spheres
         gl.glColor3f(self.color[0], self.color[1], self.color[2])
+        gl.glPushMatrix()
+        gl.glTranslatef(point1[0], point1[1], point1[2])
+        glut.glutSolidSphere(0.2, 8, 8)
+        gl.glPopMatrix()
+
+        gl.glPushMatrix()
+        gl.glTranslatef(point2[0], point2[1], point2[2])
+        glut.glutSolidSphere(0.2, 8, 8)
+        gl.glPopMatrix()
+
+        # draw a line between them
+        if current_length < self.length:
+            gl.glColor3f(0.0, 1.0, 0.0)
+        else:
+            gl.glColor3f(1.0, 0.0, 0.0)
         gl.glBegin(gl.GL_LINES)
         gl.glVertex3f(point1[0], point1[1], point1[2])
         gl.glVertex3f(point2[0], point2[1], point2[2])
