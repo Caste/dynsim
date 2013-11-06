@@ -120,20 +120,20 @@ class rigid_body:
         v1 = self._velocity
         a1 = self.__acceleration(x1, v1, 0)
 
-        x2 = self.position + 0.5*v1*delta_time
-        v2 = self._velocity + 0.5*a1*delta_time
-        a2 = self.__acceleration(x2, v2, delta_time/2.0)
+        x2 = self.position + 0.5 * v1 * delta_time
+        v2 = self._velocity + 0.5 * a1 * delta_time
+        a2 = self.__acceleration(x2, v2, delta_time / 2.0)
 
-        x3 = self.position + 0.5*v2*delta_time
-        v3 = self._velocity + 0.5*a2*delta_time
-        a3 = self.__acceleration(x3, v3, delta_time/2.0)
+        x3 = self.position + 0.5 * v2 * delta_time
+        v3 = self._velocity + 0.5 * a2 * delta_time
+        a3 = self.__acceleration(x3, v3, delta_time / 2.0)
 
-        x4 = self.position + v3*delta_time
-        v4 = self._velocity + a3*delta_time
+        x4 = self.position + v3 * delta_time
+        v4 = self._velocity + a3 * delta_time
         a4 = self.__acceleration(x4, v4, delta_time)
 
-        self.position += (delta_time/6.0)*(v1 + 2*v2 + 2*v3 + v4)
-        self._velocity += (delta_time/6.0)*(a1 + 2*a2 + 2*a3 + a4)
+        self.position += (delta_time / 6.0) * (v1 + 2 * v2 + 2 * v3 + v4)
+        self._velocity += (delta_time / 6.0) * (a1 + 2 * a2 + 2 * a3 + a4)
         self._force = np.array([0.0, 0.0, 0.0])
 
         # rotational
@@ -142,20 +142,20 @@ class rigid_body:
         t1 = self.__angular_acceleration(o1, w1, 0)
 
         # orientation update is R' = w x R, where we need the cross product matrix of w!
-        o2 = self._orientation + np.dot(crossProdMatrix(0.5*w1*delta_time), self._orientation)
-        w2 = self._angular_velocity + 0.5*t1*delta_time
-        t2 = self.__angular_acceleration(o2, w2, delta_time/2.0)
+        o2 = self._orientation + np.dot(crossProdMatrix(w1), o1) * 0.5 * delta_time
+        w2 = self._angular_velocity + 0.5 * t1 * delta_time
+        t2 = self.__angular_acceleration(o2, w2, delta_time / 2.0)
 
-        o3 = self._orientation + np.dot(crossProdMatrix(0.5*w2*delta_time), self._orientation)
-        w3 = self._angular_velocity + 0.5*t2*delta_time
-        t3 = self.__angular_acceleration(o3, w3, delta_time/2.0)
+        o3 = self._orientation + np.dot(crossProdMatrix(w2), o2) * 0.5 * delta_time
+        w3 = self._angular_velocity + 0.5 * t2 * delta_time
+        t3 = self.__angular_acceleration(o3, w3, delta_time / 2.0)
 
-        o4 = self._orientation + np.dot(crossProdMatrix(w3*delta_time), self._orientation)
-        w4 = self._angular_velocity + t3*delta_time
+        o4 = self._orientation + np.dot(crossProdMatrix(w3), o3) * 0.5 * delta_time
+        w4 = self._angular_velocity + t3 * delta_time
         t4 = self.__angular_acceleration(o4, w4, delta_time)
 
-        self._orientation += (delta_time/6.0)*np.dot(crossProdMatrix(w1 + 2*w2 + 2*w3 + w4), self._orientation)
-        self._angular_velocity += (delta_time/6.0)*(t1 + 2*t2 + 2*t3 + t4)
+        self._orientation += (delta_time / 6.0) * np.dot(crossProdMatrix(w1 + 2 * w2 + 2 * w3 + w4), self._orientation)
+        self._angular_velocity += (delta_time / 6.0) * (t1 + 2 * t2 + 2 * t3 + t4)
         self._torque = np.array([0.0, 0.0, 0.0])
 
         # check orthonormality of orientation: should be Identity matrix!!
