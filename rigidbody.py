@@ -62,7 +62,7 @@ class rigid_body:
         self.color = np.array([0.0, 0.0, 0.0])
 
         # translational
-        self.mass = 0.0
+        self.mass = 1.0
         self.position = np.array([0.0, 0.0, 0.0])
         self._velocity = np.array([0.0, 0.0, 0.0])
         self._force = np.array([0.0, 0.0, 0.0])
@@ -168,7 +168,34 @@ class rigid_body:
         self._orientation = orthonormalize(self._orientation)
 
     def draw(self):
-        print("Not implemented!")
+        # store the matrix that has been used for transformations before,
+        # because all translations, rotations, scaling alter it
+        gl.glPushMatrix()
+
+        # set the appropriate color
+        gl.glColor3f(self.color[0], self.color[1], self.color[2])
+
+        # translate, rotate and scale operations need to be read from last to first,
+        # in the same way as a multiplication of the vector through matrices would be:
+        # pointToRender = Translation * Rotation * Scaling * inputPoint
+
+        # apply the translation
+        gl.glTranslatef(self.position[0], self.position[1], self.position[2])
+
+        # apply the rotation matrix (needs to be 4x4)
+        rotation_matrix = np.zeros((4, 4))
+        rotation_matrix[:3, :3] = np.transpose(self._orientation)
+        rotation_matrix[3, 3] = 1.0
+
+        gl.glMultMatrixf(rotation_matrix)
+
+        self.draw_shape()
+
+        # restore previous transformation matrix
+        gl.glPopMatrix()
+
+    def draw_shape(self):
+        print("Not implemented")
 
     def apply_force(self, force):
         self._force += force
@@ -195,11 +222,11 @@ class rigid_body:
 
 
 class cube(rigid_body):
-    def __init__(self):
+    def __init__(self, width=1.0, height=1.0, depth=1.0):
         rigid_body.__init__(self)
-        self.width = 1.0
-        self.height = 1.0
-        self.depth = 1.0
+        self.width = width
+        self.height = height
+        self.depth = depth
 
         self._inertia_tensor = np.array([[(self.height ** 2 + self.depth ** 2) / 12.0, 0.0, 0.0],
                                          [0.0, (self.width ** 2 + self.depth ** 2) / 12.0, 0.0],
@@ -221,33 +248,37 @@ class cube(rigid_body):
         local_point[2] *= self.depth
         return rigid_body.convert_to_global(self, local_point)
 
-    def draw(self):
-        # store the matrix that has been used for transformations before,
-        # because all translations, rotations, scaling alter it
-        gl.glPushMatrix()
-
-        # set the appropriate color
-        gl.glColor3f(self.color[0], self.color[1], self.color[2])
-
-        # translate, rotate and scale operations need to be read from last to first,
-        # in the same way as a multiplication of the vector through matrices would be:
-        # pointToRender = Translation * Rotation * Scaling * inputPoint
-
-        # apply the translation
-        gl.glTranslatef(self.position[0], self.position[1], self.position[2])
-
-        # apply the rotation matrix (needs to be 4x4)
-        rotation_matrix = np.zeros((4, 4))
-        rotation_matrix[:3, :3] = np.transpose(self._orientation)
-        rotation_matrix[3, 3] = 1.0
-
-        gl.glMultMatrixf(rotation_matrix)
-
+    def draw_shape(self):
         # scale to appropriate size
         gl.glScalef(self.width, self.height, self.depth)
 
         # draw cube
         glut.glutSolidCube(1.0)
 
-        # restore previous transformation matrix
-        gl.glPopMatrix()
+
+class sphere(rigid_body):
+    def __init__(self, radius=1.0):
+        rigid_body.__init__(self)
+        self.radius = radius
+
+        self._inertia_tensor = np.array([[(self.radius ** 2) * 0.4, 0.0, 0.0],
+                                         [0.0, (self.radius ** 2) * 0.4, 0.0],
+                                         [0.0, 0.0, (self.radius ** 2) * 0.4]]) * self.mass
+
+    def convert_to_local(self, point):
+        # get the rotated and translated point in local coordinates and apply inverse scaling
+        local_point = rigid_body.convert_to_local(self, point)
+        local_point /= self.radius
+        return local_point
+
+    def convert_to_global(self, point):
+        # apply scaling, then rotation and translation
+        local_point = point
+        local_point *= self.radius
+        return rigid_body.convert_to_global(self, local_point)
+
+    def draw_shape(self):
+        # draw sphere
+        # glut.glutSolidSphere(self.radius, 16, 16)
+        glut.glutWireSphere(self.radius, 16, 16)
+
