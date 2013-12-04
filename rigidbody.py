@@ -142,30 +142,32 @@ class particle:
 
 
 class rigid_body(particle):
-    damping = 0.5
+    damping = 0.1
 
     def __init__(self):
         particle.__init__(self)
 
         # rotational
         self._orientation = np.identity(3)
+        self._inv_orientation = np.identity(3)
         self._angular_velocity = np.array([0.0, 0.0, 0.0])
         self._torque = np.array([0.0, 0.0, 0.0])
         self._inertia_tensor = np.identity(3)
+        self._world_inertia_tensor = np.identity(3)
+        self._world_inverse_inertia_tensor = np.identity(3)
 
     def _time_step_euler(self, delta_time):
         particle.__time_step_euler(self, delta_time)
 
         # update rotations (np.dot is matrix multiplication, matrix-vector multiplication or dot product for 2 vectors)
         self._orientation += np.dot(crossProdMatrix(self._angular_velocity), self._orientation) * delta_time
-        self._angular_velocity += np.dot(numpy.linalg.inv(self._inertia_tensor),
+        self._angular_velocity += np.dot(self._world_inverse_inertia_tensor,
                                          (self._torque - np.dot(self._angular_velocity,
-                                                                np.dot(self._inertia_tensor,
+                                                                np.dot(self._world_inertia_tensor,
                                                                        self._angular_velocity)))) * delta_time
         self._torque = np.array([0.0, 0.0, 0.0])
 
-        # orthonormalize orientation
-        self._orientation = orthonormalize(self._orientation)
+        self._update_orientation_matrices()
 
     def __angular_acceleration(self, orientation, angular_velocity, t):
         # split up w' = J-1 * (t - w x (Jw))
@@ -173,11 +175,15 @@ class rigid_body(particle):
         #               J-1 * (t - b)
         #               J-1 * c
 
-        a = np.dot(self._inertia_tensor, self._angular_velocity)
-        b = np.dot(crossProdMatrix(self._angular_velocity), a)
+        temp_world_inertia_tensor = np.dot(orientation, np.dot(self._inertia_tensor, np.transpose(orientation)))
+        temp_world_inverse_inertia_tensor = np.dot(orientation, np.dot(numpy.linalg.inv(self._inertia_tensor),
+                                                                       np.transpose(orientation)))
+
+        a = np.dot(temp_world_inertia_tensor, angular_velocity)
+        b = np.dot(crossProdMatrix(angular_velocity), a)
         c = self._torque - b
 
-        return np.dot(numpy.linalg.inv(self._inertia_tensor), c) - rigid_body.damping * self._angular_velocity
+        return np.dot(temp_world_inverse_inertia_tensor, c) - rigid_body.damping * angular_velocity
 
     def _time_step_rk(self, delta_time):
         particle._time_step_rk(self, delta_time)
@@ -204,8 +210,22 @@ class rigid_body(particle):
         self._angular_velocity += (delta_time / 6.0) * (t1 + 2 * t2 + 2 * t3 + t4)
         self._torque = np.array([0.0, 0.0, 0.0])
 
+        self._update_orientation_matrices()
+
+    def _update_orientation_matrices(self):
         # orthonormalize orientation
         self._orientation = orthonormalize(self._orientation)
+        self._inv_orientation = np.transpose(self._orientation)
+
+        # update world inertia tensors:
+        self._world_inertia_tensor = np.dot(self._orientation,
+                                            np.dot(self._inertia_tensor,
+                                                   np.transpose(self._orientation)))
+
+        self._world_inverse_inertia_tensor = np.dot(self._orientation,
+                                                    np.dot(numpy.linalg.inv(self._inertia_tensor),
+                                                           np.transpose(self._orientation)))
+
 
     def draw(self):
         # store the matrix that has been used for transformations before,
@@ -249,7 +269,8 @@ class rigid_body(particle):
         return velocity
 
     def apply_force_at(self, force, point):
-        local_point = self.convert_to_local(point)
+        # local_point = self.convert_to_local(point)
+        local_point = point - self.position
 
         # if force is not applied at center: compute torque
         self._torque += np.dot(crossProdMatrix(local_point), force)

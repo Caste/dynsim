@@ -1,13 +1,16 @@
 __author__ = 'chaubold'
 
+import math
+
 import OpenGL.GLUT as glut
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
 import numpy as np
-import math
+
 import rigidbody
 import spring
 import cloth
+
 
 bodies = []
 springs = []
@@ -131,7 +134,7 @@ def init():
     s.length = 2.0
     springs.append(s)
 
-    s2 = spring.spring(5.0, c2, c2.position, c3, c3.position)
+    s2 = spring.spring(5.0, c2, c2.position, c3, c3.position + np.array([0.3, 0.5, 0.4]))
     springs.append(s2)
 
 # -------------------------------------------------------
