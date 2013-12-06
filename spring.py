@@ -6,6 +6,7 @@ import numpy.linalg as la
 import OpenGL.GL as gl
 import OpenGL.GLUT as glut
 
+# spring class
 class spring:
     def __init__(self, stiffness, body1, global_contact_point1, body2, global_contact_point2, color=None):
         self.stiffness = stiffness
